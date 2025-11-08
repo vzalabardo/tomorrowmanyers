@@ -92,8 +92,17 @@ export default async function Home({
 
   const eventsWithUserRSVP = events.map((event) => ({
     ...event,
+    rsvps: event.rsvps.map((rsvp) => ({
+      ...rsvp,
+      status: rsvp.status as 'yes' | 'no' | 'maybe',
+    })),
     userRSVP: user
-      ? event.rsvps.find((rsvp) => rsvp.userId === user.id) || null
+      ? event.rsvps.find((rsvp) => rsvp.userId === user.id)
+        ? {
+            ...event.rsvps.find((rsvp) => rsvp.userId === user.id)!,
+            status: event.rsvps.find((rsvp) => rsvp.userId === user.id)!.status as 'yes' | 'no' | 'maybe',
+          }
+        : null
       : null,
   }))
 
