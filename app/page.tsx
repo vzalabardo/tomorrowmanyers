@@ -16,12 +16,14 @@ async function syncGoogleCalendar() {
   try {
     const user = await getCurrentUser()
     if (!user) {
-      return { error: 'No autorizado' }
+      console.error('❌ No autorizado')
+      return
     }
 
     const calendarId = process.env.GOOGLE_CALENDAR_ID
     if (!calendarId) {
-      return { error: 'Google Calendar no configurado' }
+      console.error('❌ Google Calendar no configurado')
+      return
     }
 
     console.log('🔄 Sincronizando Google Calendar...')
@@ -30,12 +32,11 @@ async function syncGoogleCalendar() {
     if (result.success) {
       revalidatePath('/')
       console.log(`✅ Sincronización completa: ${result.created} creados, ${result.updated} actualizados`)
+    } else {
+      console.error('❌ Error en sincronización:', result.error)
     }
-    
-    return result
   } catch (error) {
     console.error('❌ Error sincronizando:', error)
-    return { error: 'Error al sincronizar calendario' }
   }
 }
 
