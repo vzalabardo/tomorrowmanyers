@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Tomorrowmanyers",
   description: "Gestiona eventos con tus amigos",
+  themeColor: "#0a0a0a",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    colorScheme: "dark",
+  },
 };
 
 export default function RootLayout({
@@ -23,9 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es" className="dark" style={{ colorScheme: 'dark' }}>
+      <head>
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#0a0a0a" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        style={{ colorScheme: 'dark' }}
       >
         {children}
       </body>
