@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  avatarUrl    String?
+  bio          String?
+  createdAt    DateTime @default(now())
+  
+  createdEvents Event[]
+  rsvps         RSVP[]
+}
+
+model Event {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  location          String?
+  startAt           DateTime
+  endAt             DateTime?
+  createdById       String
+  googleCalendarId  String?   @unique
+  createdAt         DateTime  @default(now())
+  
+  createdBy User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  rsvps     RSVP[]
+}
+
+// enum removed for SQLite compatibility. Enforce values in application layer (Zod).
+
+model RSVP {
+  id        String   @id @default(cuid())
+  eventId   String
+  userId    String
+  // Use string for status because SQLite does not support enums
+  status    String
+  createdAt DateTime @default(now())
+  
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([eventId, userId])
+}
